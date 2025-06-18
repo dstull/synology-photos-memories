@@ -31,7 +31,7 @@ app.set('view engine', 'ejs');
 async function authenticate() {
   process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0; 
   const authResponse = await fetch(
-    `https://${ip}/photo/webapi/auth.cgi?api=SYNO.API.Auth&version=3&method=login&account=${encodeURIComponent(user)}&passwd=${encodeURIComponent(password)}`
+    `http://${ip}/webapi/entry.cgi?api=SYNO.API.Auth&version=6&method=login&account=${encodeURIComponent(user)}&passwd=${encodeURIComponent(password)}`
   )
   process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 1;
   const authData = await authResponse.json()
@@ -48,7 +48,7 @@ async function fetchPhotos(sid) {
  
    while (hasMore) {
      const photosResponse = await fetch(
-       `https://${ip}/photo/webapi/entry.cgi?api=SYNO.${fotoSpace}.Browse.Item&version=1&method=list&type=photo&offset=${offset}&limit=${limit}&_sid=${sid}&additional=["thumbnail","resolution"]`
+       `http://${ip}/webapi/entry.cgi?api=SYNO.${fotoSpace}.Browse.Item&version=1&method=list&offset=${offset}&limit=${limit}&_sid=${sid}&additional=["thumbnail","resolution"]`
      );
 
      const photosData = await photosResponse.json();
@@ -108,7 +108,7 @@ function getThumbnailUrl(ip, sid, photo) {
       thumbnail: { cache_key }
     }
   } = photo
-  return `https://${ip}/photo/webapi/entry.cgi?api=SYNO.${fotoSpace}.Thumbnail&version=1&method=get&mode=download&id=${id == cache_key.split('_')[0] ? id : cache_key.split('_')[0]}&type=unit&size=xl&cache_key=${cache_key}&_sid=${sid}`
+  return `http://${ip}/webapi/entry.cgi?api=SYNO.${fotoSpace}.Thumbnail&version=1&method=get&mode=download&id=${id == cache_key.split('_')[0] ? id : cache_key.split('_')[0]}&type=unit&size=xl&cache_key=${cache_key}&_sid=${sid}`
 }
 
 function returnPhotoUrls(photos, sid) {
